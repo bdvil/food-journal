@@ -14,13 +14,13 @@ def ingredients_group():
     pass
 
 
-def get_ingredient(conn: Connection, user_id: int) -> Ingredient | None:
+def search_ingredients(conn: Connection, user_id: int, query: str) -> list[Ingredient]:
     with conn.cursor(row_factory=class_row(Ingredient)) as cur:
         cur.execute(
-            "SELECT * FROM ingredients WHERE user_id = %s",
-            (user_id,),
+            "SELECT * FROM ingredients WHERE user_id = %s AND ingredient LIKE %s LIMIT 10",
+            (user_id, f"%{query}%"),
         )
-        return cur.fetchone()
+        return cur.fetchall()
 
 
 def ingredient_exists(conn: Connection, user_id: int, ingredient: str) -> bool:
@@ -58,3 +58,19 @@ def ingredient_add_command(username: str, ingredient: str, group: bool):
             )
             conn.commit()
         click.echo(click.style("Ingredient added.", fg="green"))
+
+
+@ingredients_group.command("search")
+@click.argument("username", type=str)
+@click.argument("query", type=str)
+def ingredient_search_command(username: str, query: str):
+    config = load_config()
+    with Connection.connect(config.database_url) as conn:
+        user = get_user(conn, username)
+        if user is None:
+            click.echo(click.style(f"User {username} does not exist.", fg="red"))
+            return
+
+        ingredients = search_ingredients(conn, user.id, query)
+        for ingredient in ingredients:
+            click.echo(f"* {ingredient.ingredient}")
