@@ -1,13 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <title>Index</title>
 
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Index">
+<head>
+    <meta charset="utf-8">
+    <title>Index</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Index">
+    <script src="/static/htmx.min.js"></script>
 </head>
+
 <body>
     <h1>Hello!</h1>
+    <ul>
+        <li><input type="text" name="ingredient" hx-get="/search/ingredients" hx-trigger="keyup changed delay:500ms"
+                hx-target="#suggestions" /></li>
+    </ul>
+    <div id="suggestions"></div>
 </body>
+
 </html>
