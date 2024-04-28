@@ -12,7 +12,7 @@ class User(BaseModel):
 async def get_user(conn: AsyncConnection, username: str) -> User | None:
     async with conn.cursor(row_factory=class_row(User)) as cur:
         await cur.execute(
-            "SELECT id, username, pasword FROM users WHERE username = %s", (username,)
+            "SELECT id, username, password FROM users WHERE username = %s", (username,)
         )
         return await cur.fetchone()
 

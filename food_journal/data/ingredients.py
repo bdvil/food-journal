@@ -15,11 +15,11 @@ class Ingredient(BaseModel):
 
 
 async def get_latest_ingredients(
-    conn: AsyncConnection, user_id: int, ingredient: str
+    conn: AsyncConnection, user_id: int, query: str
 ) -> list[Ingredient]:
     async with conn.cursor(row_factory=class_row(Ingredient)) as cur:
         await cur.execute(
             "SELECT * FROM ingredients WHERE user_id = %s AND ingredient LIKE %s LIMIT 10",
-            (user_id, f"%{ingredient}%"),
+            (user_id, f"%{query}%"),
         )
-        return await cur.fetchmany()
+        return await cur.fetchall()
