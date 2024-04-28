@@ -32,7 +32,7 @@ CREATE TABLE journal_entry (
     user_id INTEGER,
     created TIMESTAMP,
     updated TIMESTAMP,
-    notes TEXT DEFAULT "",
+    notes TEXT DEFAULT ''
 );
 
 CREATE TABLE entry_ingredients (
@@ -40,6 +40,6 @@ CREATE TABLE entry_ingredients (
     ingredient_id INTEGER,
     quantity INTEGER,
     quantity_type INTEGER,
-    notes TEXT DEFAULT ""
+    notes TEXT DEFAULT ''
 );
 
