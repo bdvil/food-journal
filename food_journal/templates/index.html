@@ -12,17 +12,17 @@
 
 <body>
     <h1>Hello!</h1>
-    <form method="post">
+    <form method="post" action="/add-entry" accept-charset="utf-8" enctype="application/x-www-form-urlencoded">
         <ul id="ingredient-list">
             <li>
                 <input type="text" id="ingredient-0" name="ingredient-0" hx-get="/search/ingredients"
-                    hx-trigger="keyup changed delay:500ms" hx-target="#suggestions" />
+                    hx-trigger="keyup changed delay:500ms" hx-target="#suggestions">
             </li>
         </ul>
         <button type="button" id="add-ingredient">+</button>
         <div id="suggestions"></div>
         <textarea name="additional-notes" placeholder="Additional notes"></textarea>
-        <button type="submit">Send</button>
+        <input type="submit" value="Send">
     </form>
 
     <script>
