@@ -12,11 +12,70 @@
 
 <body>
     <h1>Hello!</h1>
-    <ul>
-        <li><input type="text" name="ingredient" hx-get="/search/ingredients" hx-trigger="keyup changed delay:500ms"
-                hx-target="#suggestions" /></li>
-    </ul>
-    <div id="suggestions"></div>
+    <form method="post">
+        <ul id="ingredient-list">
+            <li>
+                <input type="text" id="ingredient-0" name="ingredient-0" hx-get="/search/ingredients"
+                    hx-trigger="keyup changed delay:500ms" hx-target="#suggestions" />
+            </li>
+        </ul>
+        <button type="button" id="add-ingredient">+</button>
+        <div id="suggestions"></div>
+        <textarea name="additional-notes" placeholder="Additional notes"></textarea>
+        <button type="submit">Send</button>
+    </form>
+
+    <script>
+        let numIngredients = 1;
+        const addIngredientButton = document.getElementById("add-ingredient");
+        addIngredientButton.addEventListener("click", addIngredient);
+
+
+        document.addEventListener("keydown", addIngredientOnTab, false);
+
+        function addIngredientOnTab(event) {
+            if (event.key == "Tab") {
+                const activeElement = document.activeElement;
+                const elementId = activeElement.getAttribute("id");
+                if (activeElement !== null && elementId !== null && elementId.startsWith("ingredient-")) {
+                    event.preventDefault();
+                    let id = parseInt(elementId.split("-")[1]);
+                    let lastElement = null;
+                    let nextElement = null;
+                    do {
+                        lastElement = nextElement;
+                        nextElement = document.getElementById(`ingredient-${id + 1}`);
+                        id++;
+                    } while (nextElement != null);
+                    console.log(lastElement);
+                    if (lastElement != null && lastElement.value == "") {
+                        lastElement.focus();
+                    }
+                    else if (activeElement.value != "") {
+                        addIngredient();
+                    }
+                }
+            }
+        }
+
+        function addIngredient() {
+            const ingredientList = document.getElementById("ingredient-list");
+            const newInput = document.createElement("input");
+            newInput.setAttribute("type", "text");
+            newInput.setAttribute("id", `ingredient-${numIngredients}`);
+            newInput.setAttribute("name", `ingredient-${numIngredients}`);
+            newInput.setAttribute("hx-get", "/search/ingredients");
+            newInput.setAttribute("hx-trigger", "keyup changed delay:500ms");
+            newInput.setAttribute("hx-target", "#suggestions");
+
+            const newLi = document.createElement("li");
+            newLi.appendChild(newInput);
+            ingredientList.appendChild(newLi);
+            htmx.process(newLi);
+            numIngredients++;
+            newInput.focus();
+        }
+    </script>
 </body>
 
 </html>
